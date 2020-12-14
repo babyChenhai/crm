@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserServiceImpl implements UserService {
-    UserDao userDao = SqlSessionUtil.getSqlSession().getMapper(UserDao.class);
+    private UserDao userDao = SqlSessionUtil.getSqlSession().getMapper(UserDao.class);
     @Override
     public User login(String loginAct, String loginPwd, String ip) throws LoginException {
         System.out.println("进入服务层了");
