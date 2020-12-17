@@ -75,4 +75,14 @@ public class ActivityServiceImpl implements ActivityService {
         map.put("a",a);
         return map;
     }
+
+    @Override
+    public boolean update(Activity a) {
+        boolean flag = true;
+        Integer count = activityDao.update(a);
+        if (count != 1){
+            flag = false;
+        }
+        return flag;
+    }
 }

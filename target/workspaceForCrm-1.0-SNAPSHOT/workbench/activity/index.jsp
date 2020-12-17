@@ -164,6 +164,39 @@
             }
         })
 
+        //给更新按钮绑定事件
+        $("#updateBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/update.do",
+                data:{
+                    "id" : $.trim($("#edit-id").val()),
+                    "owner" : $.trim($("#edit-owner").val()),
+                    "name" : $.trim($("#edit-name").val()),
+                    "startDate" : $.trim($("#edit-startDate").val()),
+                    "endDate" : $.trim($("#edit-endDate").val()),
+                    "cost" : $.trim($("#edit-cost").val()),
+                    "description" : $.trim($("#edit-description").val())
+                },
+                type: "post",
+                dataType: "json",
+                success:function (data) {
+                    //data: {"success" : true/false}
+                    if (data.success){  //修改成功
+                        //刷新活动列表
+                        pageList(1,5);
+                        /*
+                            jQuery --> dom : jquery对象[0]
+                            dom --> jQuery : $(dom对象)
+                         */
+                        //关闭模态窗口
+                        $("#editActivityModal").modal("hide");
+                    }else { //修改失败
+                        alert("市场活动修改失败")
+                    }
+                }
+            })
+        })
+
         //给全选框绑定全选事件
         $("#qx").click(function () {
             $("input[name=xz]").prop("checked",this.checked);
@@ -176,6 +209,16 @@
 
         //给修改按钮绑定事件
         $("#editBtn").click(function () {
+
+            $(".time").datetimepicker({
+                minView: "month",
+                language:  'zh-CN',
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayBtn: true,
+                pickerPosition: "bottom-left"
+            });
+
             var $xz = $("input[name=xz]:checked");
             if ($xz.length==0){
                 alert("请选择一项活动进行修改");
@@ -197,7 +240,6 @@
                             "a":{市场活动对象}
                          */
                         //铺数据,打开模态窗口
-                        alert(data);
                         var html = "<option></option>"
                         $.each(data.uList,function (i,n) {
                             html += "<option value='"+n.id+"'>"+n.name+"</option>"
@@ -207,6 +249,7 @@
                         //处理单条
                         $("#edit-id").val(data.a.id);
                         $("#edit-name").val(data.a.name);
+                        $("#edit-owner").val(data.a.owner);
                         $("#edit-startDate").val(data.a.startDate);
                         $("#edit-endDate").val(data.a.endDate);
                         $("#edit-cost").val(data.a.cost);
@@ -406,11 +449,11 @@
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="edit-startDate">
+								<input type="text" class="form-control time" id="edit-startDate" readonly>
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="edit-endDate" >
+								<input type="text" class="form-control time" id="edit-endDate" readonly>
 							</div>
 						</div>
 						

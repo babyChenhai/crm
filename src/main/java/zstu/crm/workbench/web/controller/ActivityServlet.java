@@ -35,6 +35,36 @@ public class ActivityServlet extends HttpServlet {
         else if ("/workbench/activity/getUserListAndActivity.do".equals(path)){
             getUserListAndActivity(request,response);
         }
+        else if ("/workbench/activity/update.do".equals(path)){
+            update(request,response);
+        }
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        String owner = request.getParameter("owner");
+        String name = request.getParameter("name");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String cost = request.getParameter("cost");
+        String description = request.getParameter("description");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User) request.getSession().getAttribute("user")).getName();
+        Activity a = new Activity();
+        a.setId(id);
+        a.setName(name);
+        a.setOwner(owner);
+        a.setStartDate(startDate);
+        a.setEndDate(endDate);
+        a.setCost(cost);
+        a.setDescription(description);
+        a.setEditTime(editTime);
+        a.setEditBy(editBy);
+
+        //创建service对象处理事务
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        boolean flag = as.update(a);
+        PrintJson.printJsonFlag(response,flag);
     }
 
     private void getUserListAndActivity(HttpServletRequest request, HttpServletResponse response) {
